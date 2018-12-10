@@ -5,14 +5,14 @@
 #' @return  a data frame of downloaded datasets 
 #' @examples \dontrun{
 #' ### Just get file names, used in many other prism* fxn
-#' # get_prism_dailys(type="tmean", minDate = "2013-06-01", maxDate = "2013-06-14", keepZip=FALSE)
-#' # ls_prism_data()
+#' get_prism_dailys(type="tmean", minDate = "2013-06-01", maxDate = "2013-06-14", keepZip=FALSE)
+#' ls_prism_data()
 #' 
 #' ### Get absolute path values for use with other data
-#' # ls_prism_data(absPath = TRUE)
+#' ls_prism_data(absPath = TRUE)
 #' 
 #' ### See prism files you have with title of data product
-#' # ls_prism_data(name=TRUE)
+#' ls_prism_data(name=TRUE)
 #' }
 #' @export
 
