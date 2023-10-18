@@ -1,5 +1,6 @@
 
-#' @param mon a valid numeric month, or vector of months.
+#' @param mon a valid numeric month, or vector of months. Required for 
+#'   `get_prism_monthlys()`. Can be `NULL` for `get_prism_normals()`.
 #' 
 #' @examples \dontrun{
 #' # Get all the precipitation data for January from 1990 to 2000
@@ -12,8 +13,8 @@
 #' @rdname get_prism_data
 #' 
 #' @export
-get_prism_monthlys <- function(type, years = NULL, mon = NULL, keepZip = TRUE,
-                               keep_pre81_months = TRUE)
+get_prism_monthlys <- function(type, years, mon = 1:12, keepZip = TRUE,
+                               keep_pre81_months = TRUE, service = NULL)
 {
   ### parameter and error handling
 
@@ -43,12 +44,16 @@ get_prism_monthlys <- function(type, years = NULL, mon = NULL, keepZip = TRUE,
   uris_pre81 <- vector()
   uris_post81 <- vector()
   
+  if (is.null(service)) {
+	service <- "http://services.nacse.org/prism/data/public/4km"
+  }
+  
   if (length(pre_1981)) {
     uris_pre81 <- sapply(
       pre_1981,
       function(x) {
         paste(
-          "http://services.nacse.org/prism/data/public/4km", type, x, sep = "/"
+          service, type, x, sep = "/"
         )
       }
     )
@@ -65,15 +70,15 @@ get_prism_monthlys <- function(type, years = NULL, mon = NULL, keepZip = TRUE,
       uri_dates_post81,
       function(x) {
         paste(
-          "http://services.nacse.org/prism/data/public/4km",type,x,sep="/"
+          service, type, x, sep="/"
         )
       }
     )
   }
     
   download_pb <- txtProgressBar(
-    min = 0, 
-    max = length(uris_post81) + length(uris_pre81), 
+    min = 0,
+    max = length(uris_post81) + length(uris_pre81),
     style = 3
   )
  
@@ -81,11 +86,9 @@ get_prism_monthlys <- function(type, years = NULL, mon = NULL, keepZip = TRUE,
 
   ### Handle post 1981 data
   if(length(uris_post81) > 0){    
-  
       for(i in 1:length(uris_post81)){
-      prism_webservice(uris_post81[i],keepZip)
-      setTxtProgressBar(download_pb, i)
-      
+        prism_webservice(uris_post81[i],keepZip)
+        setTxtProgressBar(download_pb, i)
     }
   }
     

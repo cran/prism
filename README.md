@@ -3,17 +3,17 @@
 
 # `prism`
 
-[![CRAN\_Status\_Badge](https://www.r-pkg.org/badges/version/prism)](https://cran.r-project.org/package=prism)
+[![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/prism)](https://cran.r-project.org/package=prism)
 [![R build
 status](https://github.com/ropensci/prism/workflows/R-CMD-check/badge.svg)](https://github.com/ropensci/prism/actions)
-[![codecov.io](https://codecov.io/github/ropensci/prism/coverage.svg?branch=master)](https://codecov.io/github/ropensci/prism?branch=master)
+[![codecov.io](https://codecov.io/github/ropensci/prism/coverage.svg?branch=master)](https://app.codecov.io/github/ropensci/prism?branch=master)
 
 This package allows users to access and visualize data from the [Oregon
 State PRISM project](https://prism.nacse.org). Data are all in the form
 of gridded rasters for the continental US at 4 different temporal
 scales: daily, monthly, annual, and 30 year normals. Please see their
 webpage for a full description of the data products, or [see their
-overview](https://www.prism.oregonstate.edu/documents/PRISM_datasets_aug2013.pdf).
+overview](https://www.prism.oregonstate.edu/documents/PRISM_datasets.pdf).
 
 ## Installation
 
@@ -56,11 +56,11 @@ Data are available in 4 different temporal scales as mentioned above. At
 each temporal scale, there are 7 different parameters/variables
 available. Keep in mind these are modeled parameters, not measured.
 Please see the [full
-description](https://www.prism.oregonstate.edu/documents/Daly2008_PhysiographicMapping_IntJnlClim.pdf)
+description](https://www.prism.oregonstate.edu/documents/PRISM_datasets.pdf)
 for how they are calculated.
 
 | Parameter name | Description                          |
-| :------------- | :----------------------------------- |
+|:---------------|:-------------------------------------|
 | *tmean*        | Mean temperature                     |
 | *tmax*         | Maximum temperature                  |
 | *tmin*         | Minimum temperature                  |
@@ -76,6 +76,10 @@ be saved to:
 
 ``` r
 library(prism)
+#> The legacy packages maptools, rgdal, and rgeos, underpinning this package
+#> will retire shortly. Please refer to R-spatial evolution reports on
+#> https://r-spatial.org/r/2023/05/15/evolution4.html for details.
+#> This package is now running under evolution status 0
 #> Be sure to set the download folder using `prism_set_dl_dir()`.
 prism_set_dl_dir("~/prismtmp")
 ```
@@ -139,16 +143,16 @@ work off of one or more of these folder names (`pd`).
 ``` r
 ## Truncated to keep file list short
 prism_archive_ls()
-#>  [1] "PRISM_ppt_30yr_normal_4kmM2_annual_bil"  
-#>  [2] "PRISM_ppt_30yr_normal_800mM2_02_bil"     
-#>  [3] "PRISM_ppt_stable_4kmD2_19810101_bil"     
-#>  [4] "PRISM_ppt_stable_4kmD2_19820101_bil"     
-#>  [5] "PRISM_ppt_stable_4kmD2_19830101_bil"     
-#>  [6] "PRISM_ppt_stable_4kmD2_20120101_bil"     
-#>  [7] "PRISM_ppt_stable_4kmM3_2000_bil"         
-#>  [8] "PRISM_ppt_stable_4kmM3_2001_bil"         
-#>  [9] "PRISM_ppt_stable_4kmM3_2002_bil"         
-#> [10] "PRISM_ppt_stable_4kmM3_2003_bil"         
+#>   [1] "PRISM_ppt_30yr_normal_4kmM4_01_bil"      
+#>   [2] "PRISM_ppt_30yr_normal_4kmM4_annual_bil"  
+#>   [3] "PRISM_ppt_stable_4kmM2_1950_bil"         
+#>   [4] "PRISM_ppt_stable_4kmM2_195001_bil"       
+#>   [5] "PRISM_ppt_stable_4kmM2_195002_bil"       
+#>   [6] "PRISM_ppt_stable_4kmM2_195003_bil"       
+#>   [7] "PRISM_ppt_stable_4kmM2_195004_bil"       
+#>   [8] "PRISM_ppt_stable_4kmM2_195005_bil"       
+#>   [9] "PRISM_ppt_stable_4kmM2_195006_bil"       
+#>  [10] "PRISM_ppt_stable_4kmM2_195007_bil"       
 ....
 ```
 
@@ -161,19 +165,19 @@ can get that with the `pd_get_name()` function.
 ``` r
 ## Truncated to keep file list short
 pd_to_file(prism_archive_ls())
-#>  [1] "C:\\Users\\RAButler\\Documents\\prismtmp\\PRISM_ppt_30yr_normal_4kmM2_annual_bil\\PRISM_ppt_30yr_normal_4kmM2_annual_bil.bil"    
-#>  [2] "C:\\Users\\RAButler\\Documents\\prismtmp\\PRISM_ppt_30yr_normal_800mM2_02_bil\\PRISM_ppt_30yr_normal_800mM2_02_bil.bil"          
-#>  [3] "C:\\Users\\RAButler\\Documents\\prismtmp\\PRISM_ppt_stable_4kmD2_19810101_bil\\PRISM_ppt_stable_4kmD2_19810101_bil.bil"          
-#>  [4] "C:\\Users\\RAButler\\Documents\\prismtmp\\PRISM_ppt_stable_4kmD2_19820101_bil\\PRISM_ppt_stable_4kmD2_19820101_bil.bil"          
-#>  [5] "C:\\Users\\RAButler\\Documents\\prismtmp\\PRISM_ppt_stable_4kmD2_19830101_bil\\PRISM_ppt_stable_4kmD2_19830101_bil.bil"          
+#>   [1] "C:\\Users\\RAButler\\Documents\\prismtmp\\PRISM_ppt_30yr_normal_4kmM4_01_bil\\PRISM_ppt_30yr_normal_4kmM4_01_bil.bil"            
+#>   [2] "C:\\Users\\RAButler\\Documents\\prismtmp\\PRISM_ppt_30yr_normal_4kmM4_annual_bil\\PRISM_ppt_30yr_normal_4kmM4_annual_bil.bil"    
+#>   [3] "C:\\Users\\RAButler\\Documents\\prismtmp\\PRISM_ppt_stable_4kmM2_1950_bil\\PRISM_ppt_stable_4kmM2_1950_bil.bil"                  
+#>   [4] "C:\\Users\\RAButler\\Documents\\prismtmp\\PRISM_ppt_stable_4kmM2_195001_bil\\PRISM_ppt_stable_4kmM2_195001_bil.bil"              
+#>   [5] "C:\\Users\\RAButler\\Documents\\prismtmp\\PRISM_ppt_stable_4kmM2_195002_bil\\PRISM_ppt_stable_4kmM2_195002_bil.bil"              
 ....
 
 pd_get_name(prism_archive_ls())
-#>  [1] "Annual 30-year normals - 4km resolution - Precipitation"      
-#>  [2] "Feb 30-year normals - 800m resolution - Precipitation"        
-#>  [3] "Jan 01 1981 - 4km resolution - Precipitation"                 
-#>  [4] "Jan 01 1982 - 4km resolution - Precipitation"                 
-#>  [5] "Jan 01 1983 - 4km resolution - Precipitation"                 
+#>   [1] "Jan 30-year normals - 4km resolution - Precipitation"      
+#>   [2] "Annual 30-year normals - 4km resolution - Precipitation"   
+#>   [3] "1950 - 4km resolution - Precipitation"                     
+#>   [4] "Jan  1950 - 4km resolution - Precipitation"                
+#>   [5] "Feb  1950 - 4km resolution - Precipitation"                
 ....
 ```
 
@@ -300,7 +304,7 @@ p +
   stat_smooth(method="lm", se = FALSE) + 
   theme_bw() + 
   ggtitle("Average January temperature in Boulder, CO 1982-2014")
-#> `geom_smooth()` using formula 'y ~ x'
+#> `geom_smooth()` using formula = 'y ~ x'
 ```
 
 ![](man/figures/README-plot_Boulder-1.png)<!-- -->

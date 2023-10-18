@@ -6,10 +6,7 @@
 \alias{prism-package}
 \title{prism: Access Data from the Oregon State Prism Climate Project}
 \description{
-Allows users to access the Oregon State Prism climate data
-    (<https://www.prism.oregonstate.edu/>). Using the web service API data
-    can easily downloaded in bulk and loaded into R for spatial analysis.
-    Some user friendly visualizations are also provided.
+Allows users to access the Oregon State Prism climate data (\url{https://prism.nacse.org/}). Using the web service API data can easily downloaded in bulk and loaded into R for spatial analysis. Some user friendly visualizations are also provided.
 }
 \seealso{
 Useful links:
@@ -21,7 +18,7 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Alan Butler \email{rabutler@usbr.gov} [contributor]
+\strong{Maintainer}: Alan Butler \email{rabutler@usbr.gov} (\href{https://orcid.org/0000-0002-8625-6386}{ORCID}) [contributor]
 
 Authors:
 \itemize{

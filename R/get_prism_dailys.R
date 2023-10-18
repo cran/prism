@@ -12,7 +12,7 @@
 #'   character or [base::Date] class.
 #'
 #' @param check One of "httr" or "internal". See details.
-#'  
+#'
 #' @details 
 #' For the `check` parameter, "httr", the default, checks the file name using 
 #' the web service, and downloads if that file name is not in the file system. 
@@ -66,14 +66,22 @@
 #'
 #' @export
 get_prism_dailys <- function(type, minDate = NULL, maxDate =  NULL, 
-                             dates = NULL, keepZip = TRUE, check = "httr")
+                             dates = NULL, keepZip = TRUE, check = "httr",
+                             service = NULL)
 {
   prism_check_dl_dir()
+  
+  if (!missing(check)) {
+    warning(paste('You provided the `check` argument.',
+    '  This argument will be removed in the next release of prism.', 
+    sep = '\n'))
+  }
+  
   check <- match.arg(check, c("httr", "internal"))
   dates <- gen_dates(minDate = minDate, maxDate = maxDate, dates = dates)
 
   if( min(as.numeric(format(dates,"%Y"))) < 1981 ) { 
-    stop("You must enter a date that is later than 1980")
+    stop("You must enter a date that is on or after Januyar 1, 1981.")
   }
   
   ## Get years
@@ -81,10 +89,14 @@ get_prism_dailys <- function(type, minDate = NULL, maxDate =  NULL,
   
   type <- match.arg(type, prism_vars())
   
+  if (is.null(service)) {
+	  service <- "http://services.nacse.org/prism/data/public/4km"
+  }
+
   uri_dates <- gsub(pattern = "-",replacement = "",dates)
   uris <- sapply(uri_dates, function(x) {
     paste(
-      "http://services.nacse.org/prism/data/public/4km", type, x, 
+      service, type, x, 
       sep = "/"
     )
   })
@@ -114,7 +126,6 @@ get_prism_dailys <- function(type, minDate = NULL, maxDate =  NULL,
   }
 
   close(download_pb)
-  
 }
 
 

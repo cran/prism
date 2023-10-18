@@ -13,7 +13,6 @@
 #'   mean(tmin, tmax)`.
 #'   
 #' @param years a valid numeric year, or vector of years, to download data for.  
-#'   If no month is specified, year averages for that year will be downloaded.
 #'   
 #' @param keepZip if `TRUE`, leave the downloaded zip files in your 
 #'   'prism.path', if `FALSE`, they will be deleted.
@@ -25,6 +24,13 @@
 #'   annual data, this defaults to `FALSE`. When downloading monthly data, this
 #'   defaults to `TRUE`.
 #'   
+#' @param service Either `NULL` (default) or a URL provided by PRISM staff
+#'   for subscription-based service. Example:
+#'   "http://services.nacse.org/prism/data/subscription/800m". To use the
+#'	 subscription option, you must use an IP address registered with PRISM
+#'   staff. When `NULL`, URL defaults to: 
+#'   "http://services.nacse.org/prism/data/public/4km".
+#'
 #' @details 
 #' A valid download directory must exist before downloading any prism data. This
 #' can be set using [prism_set_dl_dir()] and can be verified using 
@@ -46,8 +52,8 @@
 #' @rdname get_prism_data
 #' 
 #' @export
-get_prism_annual <- function(type, years = NULL, keepZip = TRUE, 
-                             keep_pre81_months = FALSE)
+get_prism_annual <- function(type, years, keepZip = TRUE, 
+                             keep_pre81_months = FALSE, service = NULL)
 {
   ### parameter and error handling
   
@@ -63,17 +69,21 @@ get_prism_annual <- function(type, years = NULL, keepZip = TRUE,
     stop("You must enter a year from 1895 onwards.")
   }
     
-  pre_1981 <- years[years<1981]
+  pre_1981 <- years[years < 1981]
   post_1981 <- years[years >= 1981]
   uris_pre81 <- vector()
   uris_post81 <- vector()
+  
+  if (is.null(service)) {
+	  service <- "http://services.nacse.org/prism/data/public/4km"
+  }  
   
   if (length(pre_1981)) {
     uris_pre81 <- sapply(
       pre_1981,
       function(x) {
         paste(
-          "http://services.nacse.org/prism/data/public/4km", type, x, sep = "/"
+          service, type, x, sep = "/"
         )
       }
     )
@@ -84,15 +94,15 @@ get_prism_annual <- function(type, years = NULL, keepZip = TRUE,
       post_1981,
       function(x) {
         paste(
-          "http://services.nacse.org/prism/data/public/4km", type, x, sep = "/"
+          service, type, x, sep = "/"
         )
       }
     )
   }
   
   download_pb <- txtProgressBar(
-    min = 0, 
-    max = length(uris_post81) + length(uris_pre81), 
+    min = 0,
+    max = length(uris_post81) + length(uris_pre81),
     style = 3
   )
   
