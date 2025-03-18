@@ -12,7 +12,7 @@
 mon_to_string <- function(month)
 {
   out <- vector()
-  for(i in 1:length(month)){
+  for(i in seq_along(month)){
     if(month[i] < 1 || month[i] > 12) {
       stop("Please enter a valid numeric month")
     }
@@ -24,10 +24,11 @@ mon_to_string <- function(month)
 
 prism_not_downloaded <- function(zipfiles, lgl = FALSE, pre81_months = NULL)
 {
-  file_bases <- unlist(sapply(zipfiles, strsplit, split=".zip"))
-  which_downloaded <- sapply(
+  file_bases <- stringr::str_remove(zipfiles, '.zip')
+  which_downloaded <- vapply(
     file_bases, 
     find_prism_file, 
+    FUN.VALUE = logical(1),
     pre81_months = pre81_months
   )
   
@@ -35,6 +36,17 @@ prism_not_downloaded <- function(zipfiles, lgl = FALSE, pre81_months = NULL)
     return(!which_downloaded)
   } else {
     return(zipfiles[!which_downloaded])    
+  }
+}
+
+# x can be vector of years/ months/datee
+# will return value that is same length as x
+gen_prism_url <- function(x, type, service, resolution = NULL) 
+{
+  if (is.null(resolution)) {
+    paste(service, type, x, sep = "/")
+  } else {
+    paste(service, resolution, type, x, sep = "/")
   }
 }
 
@@ -128,25 +140,24 @@ find_prism_file <- function(base_file, pre81_months)
 #' @noRd
 process_zip <- function(pfile, name) 
 {
-  tmpwd <- list.files(paste(options("prism.path")[[1]], pfile, sep="/"))
+  tmpwd <- list.files(file.path(prism_get_dl_dir(), pfile))
   
   # Remove all.xml file
-  file.remove(paste(
-    options("prism.path")[[1]], 
+  file.remove(file.path(
+    prism_get_dl_dir(), 
     pfile, 
-    grep("all", tmpwd, value = TRUE), 
-    sep="/"
+    grep("all", tmpwd, value = TRUE)
   ))
   
   # Get new list of files after removing all.xml
-  tmpwd <- list.files(paste(options("prism.path")[[1]], pfile, sep="/"))
+  tmpwd <- list.files(file.path(prism_get_dl_dir(), pfile))
   
   fstrip <- strsplit(tmpwd, "\\.")
   fstrip <- unlist(lapply(fstrip, function(x) return(x[1])))
   unames <- unique(fstrip)
   unames <- unames[unames %in% name]
-  for(j in 1:length(unames)){
-    newdir <- paste(options("prism.path")[[1]], unames[j], sep="/")
+  for(j in seq_along(unames)){
+    newdir <- file.path(prism_get_dl_dir(), unames[j])
     tryCatch(
       dir.create(newdir), 
       error = function(e) e,
@@ -156,23 +167,22 @@ process_zip <- function(pfile, name)
     )
     
     f2copy <- grep(unames[j], tmpwd, value = TRUE)
-    sapply(f2copy, function(x){
-      file.copy(from = paste(options("prism.path")[[1]], pfile, x, sep="/"),
-                to = paste(newdir, x, sep="/"))
-    })
-    sapply(f2copy, function(x){
-      file.remove(paste(options("prism.path")[[1]], pfile, x, sep="/"))
-    })
+    
+    file.copy(
+      from = file.path(prism_get_dl_dir(), pfile, f2copy),
+      to = file.path(newdir, f2copy)
+    )
+    
+    file.remove(file.path(prism_get_dl_dir(), pfile, f2copy))
     # We lose all our metadata, so we need to rewrite it
   }
   # Remove all files so the directory can be created.
   # Update file list
-  tmpwd <- list.files(paste(options("prism.path")[[1]], pfile, sep="/"))
+  tmpwd <- list.files(file.path(prism_get_dl_dir(), pfile))
   ## Now loop delete them all
-  sapply(tmpwd, function(x){
-    file.remove(paste(options("prism.path")[[1]], pfile, x, sep="/"))
-  })
-  unlink(paste(options("prism.path")[[1]], pfile, sep="/"), recursive = TRUE)
+  file.remove(file.path(prism_get_dl_dir(), pfile, tmpwd))
+  
+  unlink(file.path(prism_get_dl_dir(), pfile), recursive = TRUE)
 }
 
 #' Checks to see if the dates (days) specified are within the available Prism 
@@ -217,12 +227,16 @@ gen_dates <- function(minDate, maxDate, dates){
   if(all(is.null(dates), is.null(minDate), is.null(maxDate)))
     stop("You must specify either a date range (minDate and maxDate) or a vector of dates")
   
-  if((!is.null(dates) && !is.null(maxDate)) | (!is.null(dates) && !is.null(minDate))){
+  if((!is.null(dates) && !is.null(maxDate)) | 
+     (!is.null(dates) && !is.null(minDate))) {
     stop("You can enter a date range or a vector of dates, but not both")
   }
   
-  if((!is.null(maxDate) & is.null(minDate)) | (!is.null(minDate) & is.null(maxDate))){
-    stop("Both minDate and maxDate must be specified if specifying a date range")
+  if((!is.null(maxDate) & is.null(minDate)) | 
+     (!is.null(minDate) & is.null(maxDate))) {
+    stop(
+      "Both minDate and maxDate must be specified if specifying a date range"
+    )
   }
   
   if(!is.null(dates)){
@@ -271,18 +285,29 @@ gen_dates <- function(minDate, maxDate, dates){
 
 #' Returns the available prism variables.
 #' @noRd
-prism_vars <- function()
+prism_vars <- function(normals = FALSE)
 {
-  c("ppt", "tmean", "tmin", "tmax", "vpdmin", "vpdmax", "tdmean")
+  x <- c("ppt", "tmean", "tmin", "tmax", "vpdmin", "vpdmax", "tdmean")
+  
+  if (isTRUE(normals)) {
+    x <- c(x, "solclear", "solslope", "soltotal", "soltrans")
+  }
+  
+  x
 }
 
 # maps prism variables and names
-prism_var_names <- function() {
+prism_var_names <- function(normals = FALSE) {
   x <- c("Precipitation", "Mean temperature", "Minimum temperature", 
          "Maximum temperature", "Minimum vapor pressure deficit",
          "Maximum vapor pressure deficit", "Mean dew point temperature")
   
-  names(x) <- prism_vars()
+  if (isTRUE(normals)) {
+    x <- c(x, "Solar radiation (clear sky)", "Solar radiation (sloped)", 
+              "Solar radiation (total)", "Cloud transmittance")
+  }
+  
+  names(x) <- prism_vars(normals = normals)
 
   x
 }

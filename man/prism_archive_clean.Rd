@@ -19,7 +19,8 @@ del_early_prov(type, minDate = NULL, maxDate = NULL, dates = NULL)
 }
 \arguments{
 \item{type}{The type of data you want to subset. Must be "ppt", "tmean",
-"tmin", "tmax", "tdmean", "vpdmin", or "vpdmax".}
+"tmin", "tmax", "tdmean", "vpdmin", "vpdmax", "solclear", "solslope",
+"soltotal", or "soltrans".}
 
 \item{temp_period}{The temporal period to subset. Must be "annual",
 "monthly", "daily", "monthly normals", or "annual normals".}
@@ -63,4 +64,12 @@ Daily data are considered "early" for the current month. The previous six
 months are provisional data. After six months data are considered stable.
 Thus early data only exist for daily data, while there can be monthly (and
 presumably yearly) provisional data.
+}
+\examples{
+\dontrun{
+# delete any provisional annual precipitation data from 2000-2023
+# del_files will containg any deleted files
+del_files <- prism_archive_clean('ppt', 'annual', 2000:2023)
+}
+
 }

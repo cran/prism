@@ -35,11 +35,20 @@ get_prism_monthlys(
   service = NULL
 )
 
-get_prism_normals(type, resolution, mon = NULL, annual = FALSE, keepZip = TRUE)
+get_prism_normals(
+  type,
+  resolution,
+  mon = NULL,
+  annual = FALSE,
+  keepZip = TRUE,
+  day = NULL
+)
 }
 \arguments{
 \item{type}{The type of data to download. Must be "ppt", "tmean", "tmin",
-"tmax", "tdmean", "vpdmin", or "vpdmax". Note that \code{tmean ==  mean(tmin, tmax)}.}
+"tmax", "tdmean", "vpdmin", or "vpdmax". "solclear", "solslope",
+"soltotal", and "soltrans" are also available only for
+\code{get_prism_normals()}. Note that \code{tmean == mean(tmin, tmax)}.}
 
 \item{years}{a valid numeric year, or vector of years, to download data for.}
 
@@ -81,6 +90,15 @@ character or \link[base:Dates]{base::Date} class.}
 or "800m".}
 
 \item{annual}{if \code{TRUE} download annual normals.}
+
+\item{day}{Download daily normals. If \code{TRUE}, then download all daily data
+for the specified months or entire year (if \code{annual} is \code{TRUE}). Individual
+days can be specified as a \code{Date} object, where the year is ignored or
+specified as characters in "mm-dd" or "mmdd" form.}
+}
+\value{
+Nothing is returned - an error will occcur if download is not
+successful.
 }
 \description{
 Download grid cell data from the
@@ -92,8 +110,9 @@ averages (\code{get_prism_normals()}). Data are at 4km resolution, except for th
 normals which can also be downloaded at 800m resolution.
 
 Download data from the prism project for 30 year normals at 4km
-or 800m grid cell resolution for precipitation, mean, min and max
-temperature
+or 800m grid cell resolution for precipitation; mean, min and max
+temperature; clear sky, sloped, and total solar radiation; and cloud
+transmittance.
 }
 \details{
 A valid download directory must exist before downloading any prism data. This
@@ -132,7 +151,8 @@ properly. Dates can be specified using either a date range via \code{minDate} an
 4km and 800m resolution. See
 \url{https://prism.nacse.org/normals/}.
 If \code{mon} is specified and \code{annual} is \code{TRUE}, then monthly and annual normal
-data will be downloaded.
+data will be downloaded. Clear sky, sloped, and total solar radiation; and
+cloud transmittance are not available for daily normals.
 }
 
 \examples{
@@ -195,6 +215,15 @@ get_prism_normals(
   annual = TRUE,
   keepZip = FALSE
 )
+
+# Get daily precip normals for January 1 and March 1
+get_prism_normals('ppt', '4km', NULL, FALSE, TRUE, c('0101', '0301'))
+
+# Get daily precip normals for all of February
+get_prism_normals('ppt', '4km', 2, FALSE, TRUE, TRUE)
+
+# Get July 2nd average temperature 30-year average
+get_prism_normals('tmean', '800m', NULL, FALSE, TRUE, as.Date('2000-07-02'))
 }
 
 }

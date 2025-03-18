@@ -23,18 +23,30 @@ folders <-
   "PRISM_ppt_stable_4kmM2_197009_bil", "PRISM_ppt_stable_4kmM2_197010_bil", 
   "PRISM_ppt_stable_4kmM2_197011_bil", "PRISM_ppt_stable_4kmM2_197012_bil", 
   "PRISM_ppt_stable_4kmM2_1971_bil", "PRISM_tdmean_stable_4kmM3_201001_bil", 
-  "PRISM_tdmean_stable_4kmM3_201002_bil", "PRISM_tmean_30yr_normal_4kmM2_01_bil", 
-  "PRISM_tmean_30yr_normal_4kmM2_02_bil", "PRISM_tmean_30yr_normal_4kmM2_03_bil", 
-  "PRISM_tmean_30yr_normal_4kmM2_04_bil", "PRISM_tmean_30yr_normal_4kmM2_05_bil", 
-  "PRISM_tmean_30yr_normal_4kmM2_06_bil", "PRISM_tmean_30yr_normal_4kmM2_annual_bil", 
-  "PRISM_tmean_stable_4kmD2_20130601_bil", "PRISM_tmean_stable_4kmD2_20130602_bil", 
-  "PRISM_tmean_stable_4kmD2_20130603_bil", "PRISM_tmean_stable_4kmD2_20130604_bil", 
-  "PRISM_tmean_stable_4kmD2_20130605_bil", "PRISM_tmean_stable_4kmD2_20130606_bil", 
-  "PRISM_tmean_stable_4kmD2_20130607_bil", "PRISM_tmean_stable_4kmD2_20130608_bil", 
-  "PRISM_tmean_stable_4kmD2_20130609_bil", "PRISM_tmean_stable_4kmD2_20130610_bil", 
-  "PRISM_tmean_stable_4kmD2_20130611_bil", "PRISM_tmean_stable_4kmD2_20130612_bil", 
-  "PRISM_tmean_stable_4kmD2_20130613_bil", "PRISM_tmean_stable_4kmD2_20130614_bil", 
-  "PRISM_tmean_stable_4kmM3_1965_bil", "PRISM_tmean_stable_4kmM3_196502_bil", 
+  "PRISM_tdmean_stable_4kmM3_201002_bil", 
+  "PRISM_tmean_30yr_normal_4kmM2_01_bil", 
+  "PRISM_tmean_30yr_normal_4kmM2_02_bil", 
+  "PRISM_tmean_30yr_normal_4kmM2_03_bil", 
+  "PRISM_tmean_30yr_normal_4kmM2_04_bil", 
+  "PRISM_tmean_30yr_normal_4kmM2_05_bil", 
+  "PRISM_tmean_30yr_normal_4kmM2_06_bil", 
+  "PRISM_tmean_30yr_normal_4kmM2_annual_bil", 
+  "PRISM_tmean_stable_4kmD2_20130601_bil", 
+  "PRISM_tmean_stable_4kmD2_20130602_bil", 
+  "PRISM_tmean_stable_4kmD2_20130603_bil", 
+  "PRISM_tmean_stable_4kmD2_20130604_bil", 
+  "PRISM_tmean_stable_4kmD2_20130605_bil", 
+  "PRISM_tmean_stable_4kmD2_20130606_bil", 
+  "PRISM_tmean_stable_4kmD2_20130607_bil", 
+  "PRISM_tmean_stable_4kmD2_20130608_bil", 
+  "PRISM_tmean_stable_4kmD2_20130609_bil", 
+  "PRISM_tmean_stable_4kmD2_20130610_bil", 
+  "PRISM_tmean_stable_4kmD2_20130611_bil", 
+  "PRISM_tmean_stable_4kmD2_20130612_bil", 
+  "PRISM_tmean_stable_4kmD2_20130613_bil", 
+  "PRISM_tmean_stable_4kmD2_20130614_bil", 
+  "PRISM_tmean_stable_4kmM3_1965_bil", 
+  "PRISM_tmean_stable_4kmM3_196502_bil", 
   "PRISM_tmean_stable_4kmM3_196503_bil", "PRISM_tmean_stable_4kmM3_196504_bil", 
   "PRISM_tmean_stable_4kmM3_196505_bil", "PRISM_tmean_stable_4kmM3_196506_bil", 
   "PRISM_tmean_stable_4kmM3_196507_bil", "PRISM_tmean_stable_4kmM3_196508_bil", 
@@ -66,7 +78,12 @@ folders <-
   "PRISM_tdmean_30yr_normal_4kmM2_annual_bil",
   "PRISM_tdmean_30yr_normal_800mM2_09_bil", 
   "PRISM_tdmean_30yr_normal_800mM2_10_bil",
-  "PRISM_tdmean_30yr_normal_800mM2_annual_bil")
+  "PRISM_tdmean_30yr_normal_800mM2_annual_bil",
+  "PRISM_ppt_30yr_normal_4kmD1_0101_bil", 
+  "PRISM_ppt_30yr_normal_4kmD1_0301_bil", 
+  "PRISM_solclear_30yr_normal_4kmM3_01_bil",
+  "PRISM_solclear_30yr_normal_4kmM3_02_bil"
+  )
 
 # all_in helper ----------------
 all_in <- function(x, y) {
@@ -152,6 +169,11 @@ test_that("prism_archive_subset() errors correctly", {
     "No need to specify `years` for 'monthly normals'"
   )
   
+  expect_error(
+    prism_archive_subset('solclear', "daily normals", resolution = '4km', 
+                         mon = 1:2)
+  )
+  
   # daily unnecessary specifications
   expect_error(
     prism_archive_subset("ppt", "daily", resolution = "800m"),
@@ -163,6 +185,12 @@ test_that("prism_archive_subset() errors correctly", {
   )
   expect_error(
     prism_archive_subset("tmin", "daily", mon = 3, minDate = "1999-01-01"),
+    "Only specify `years`/`mon` or `minDate`/`maxDate`/`dates`"
+  )
+  
+  expect_error(
+    prism_archive_subset("tmin", "daily normals", mon = 3, 
+                         minDate = "1999-01-01", resolution = '4km'),
     "Only specify `years`/`mon` or `minDate`/`maxDate`/`dates`"
   )
 })
@@ -246,7 +274,10 @@ test_that("prism:::filter_folders monthly", {
   ))
   
   expect_length(filter_folders(folders, "ppt", "monthly", years = 1965), 12)
-  expect_length(filter_folders(folders, "ppt", "monthly", years = 1965:1967), 24)
+  expect_length(
+    filter_folders(folders, "ppt", "monthly", years = 1965:1967), 
+    24
+  )
 })
 
 # filter_folders daily ------------------
@@ -303,7 +334,9 @@ test_that("prism:::filter_folders normals", {
   
   expect_true(all_in(
     filter_folders(folders, "tdmean", "monthly normals", resolution = "4km"),
-    paste0("PRISM_tdmean_30yr_normal_4kmM2_", prism:::mon_to_string(1:3), "_bil")
+    paste0(
+      "PRISM_tdmean_30yr_normal_4kmM2_", prism:::mon_to_string(1:3), "_bil"
+    )
   ))
   
   expect_true(all_in(
@@ -337,4 +370,32 @@ test_that("prism:::filter_folders normals", {
     filter_folders(folders, "tdmean", "annual normals", resolution = "800m"),
     "PRISM_tdmean_30yr_normal_800mM2_annual_bil"
   ))
+  
+  expect_equal(
+    filter_folders(folders, "solclear", "monthly normals", resolution = "4km", 
+                   mon = 1:2),
+    c("PRISM_solclear_30yr_normal_4kmM3_01_bil",
+      "PRISM_solclear_30yr_normal_4kmM3_02_bil")
+  )
+  
+  # daily normals
+  expect_equal(
+    filter_folders(folders, "ppt", "daily normals", resolution = "4km", 
+                   years = TRUE),
+    c("PRISM_ppt_30yr_normal_4kmD1_0101_bil", 
+      "PRISM_ppt_30yr_normal_4kmD1_0301_bil")
+  )
+  expect_equal(
+    filter_folders(folders, "ppt", "daily normals", resolution = "4km", 
+                   years = TRUE),
+    filter_folders(folders, "ppt", "daily normals", resolution = "4km", 
+                   mon = 1:3)
+  )
+  expect_equal(
+    filter_folders(folders, "ppt", "daily normals", resolution = "4km", 
+                   years = TRUE),
+    filter_folders(folders, "ppt", "daily normals", resolution = "4km", 
+                   dates = c("0101", "0301"))
+  )
+  
 })

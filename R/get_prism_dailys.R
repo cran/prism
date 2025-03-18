@@ -94,21 +94,18 @@ get_prism_dailys <- function(type, minDate = NULL, maxDate =  NULL,
   }
 
   uri_dates <- gsub(pattern = "-",replacement = "",dates)
-  uris <- sapply(uri_dates, function(x) {
-    paste(
-      service, type, x, 
-      sep = "/"
-    )
-  })
-  
+  uris <- gen_prism_url(uri_dates, type, service)
+ 
   if(check == "internal"){
     x <- httr::HEAD(uris[1])
     fn <- x$headers$`content-disposition`
     fn <- regmatches(fn,regexpr('\\"[a-zA-Z0-9_\\.]+',fn))
     fn <- substr(fn,2,nchar((fn)))
     fn <- gsub("provisional|early", "stable", fn)
-    file_names <- sapply(uri_dates, function(x) 
-      gsub("[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]", x, fn)
+    file_names <- stringr::str_replace(
+      fn, 
+      "[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]", 
+      uri_dates
     )
     to_download_lgl <- prism_check(file_names, lgl = TRUE)
     uris <- uris[to_download_lgl]
@@ -117,7 +114,7 @@ get_prism_dailys <- function(type, minDate = NULL, maxDate =  NULL,
   download_pb <- txtProgressBar(min = 0, max = max(length(uris), 1), style = 3)
   
   if(length(uris) > 0){
-    for(i in 1:length(uris)){
+    for(i in seq_along(uris)){
       prism_webservice(uri = uris[i],keepZip)
       setTxtProgressBar(download_pb, i)
     }

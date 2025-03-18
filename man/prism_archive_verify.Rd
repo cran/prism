@@ -21,7 +21,8 @@ check_corrupt(type, minDate = NULL, maxDate = NULL, dates = NULL)
 }
 \arguments{
 \item{type}{The type of data you want to subset. Must be "ppt", "tmean",
-"tmin", "tmax", "tdmean", "vpdmin", or "vpdmax".}
+"tmin", "tmax", "tdmean", "vpdmin", "vpdmax", "solclear", "solslope",
+"soltotal", or "soltrans".}
 
 \item{temp_period}{The temporal period to subset. Must be "annual",
 "monthly", "daily", "monthly normals", or "annual normals".}
@@ -70,4 +71,13 @@ be re-downloaded.
 Under the hood, it uses \code{raster::stack()} and then \code{raster::rasterToPoints()}
 to determine if the bil files are readable. If both those files are able
 to successfully read the files, they are assumed to be valid/readable.
+}
+\examples{
+\dontrun{
+# check all annual precipitation data from 2000-2023 are readable
+# x will contain any corrupt files, or be TRUE if they are all readable
+x <- prism_archive_verify('ppt', 'annual', 2000:2023)
+}
+
+  
 }

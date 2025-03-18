@@ -36,6 +36,13 @@
 #' @inheritParams pd_get_name
 #'
 #' @return data.frame containing metadata for all specified prism data.
+#' 
+#' @examples\dontrun{
+#' #' # Assumes 2000-2002 annual precipitation data is already downloaded
+#' pd <- prism_archive_subset('ppt', 'annual', years = 2000:2002)
+#' df <- pd_get_md(pd)
+#' head(df)
+#' }
 #'
 #' @export
 pd_get_md <- function(pd) {
@@ -50,7 +57,7 @@ pd_get_md <- function(pd) {
   if (length(final_txt_full) == 0) {
     stop("No files exist to obtain metadata from.")
   }
-  out <- lapply(1:length(final_txt_full), function(i) {
+  out <- lapply(seq_along(final_txt_full), function(i) {
     readin <- tryCatch(
       utils::read.delim(
         final_txt_full[i],

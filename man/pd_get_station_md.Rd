@@ -13,7 +13,8 @@ get_prism_station_md(type, minDate = NULL, maxDate = NULL, dates = NULL)
 \item{pd}{prism data character vector.}
 
 \item{type}{The type of data you want to subset. Must be "ppt", "tmean",
-"tmin", "tmax", "tdmean", "vpdmin", or "vpdmax".}
+"tmin", "tmax", "tdmean", "vpdmin", "vpdmax", "solclear", "solslope",
+"soltotal", or "soltrans".}
 
 \item{minDate}{Date to start subsetting daily data. Must be specified in
 a valid iso-8601 (e.g. YYYY-MM-DD) format. May be provided as either a
@@ -48,8 +49,8 @@ the folder names returned by \code{\link[=prism_archive_ls]{prism_archive_ls()}}
 \code{pd_get_station_md()} that only works with daily prism data.
 }
 \details{
-Note that station metadata does not exist for "tmean" type or for any
-"annual" temporal periods.
+Note that station metadata does not exist for "tmean" type, any
+"annual" temporal periods, nor for daily normals.
 
 See \code{\link[=prism_archive_subset]{prism_archive_subset()}} for further details
 on specifying ranges of dates for different temporal periods.

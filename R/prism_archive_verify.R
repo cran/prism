@@ -6,7 +6,7 @@
 #' [prism_archive_subset()]. Any files that are not readable can automatically 
 #' be re-downloaded.
 #' 
-#' Under the hood, it uses `raster::stack()` and then `raster::rasterToPoints()` 
+#' Under the hood, it uses `raster::stack()` and then `raster::rasterToPoints()`
 #' to determine if the bil files are readable. If both those files are able 
 #' to successfully read the files, they are assumed to be valid/readable.
 #' 
@@ -21,6 +21,13 @@
 #' @return `prism_archive_verify()` returns `TRUE` if all data are readable. 
 #'   Any prism data that are not readable are returned (folder names), whether
 #'   they are re-downloaded or not.
+#'   
+#' @examples \dontrun{
+#' # check all annual precipitation data from 2000-2023 are readable
+#' # x will contain any corrupt files, or be TRUE if they are all readable
+#' x <- prism_archive_verify('ppt', 'annual', 2000:2023)
+#' }
+#' 
 #'   
 #' @export
 prism_archive_verify <- function(type, temp_period, years = NULL, mon = NULL, 

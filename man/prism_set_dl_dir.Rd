@@ -21,6 +21,9 @@ path_check()
 \item{create}{Boolean that determines if the \code{path} will be created if it
 does not already exist.}
 }
+\value{
+Invisibly returns \code{path}
+}
 \description{
 \code{prism_set_dl_dir()} sets the directory that downloaded prism data will be
 saved to. The prism download directory is saved in the "prism.path" option.
@@ -35,4 +38,16 @@ download location. If not in interactive mode, and it has not been set, then
 set to "~/prismtmp".
 
 \code{path_check()} is a deprecated version of \code{prism_check_dl_dir()}.
+}
+\examples{
+prism_set_dl_dir('.')
+prism_set_dl_dir('~/prismtmp') # default
+
+  
+prism_get_dl_dir()
+
+
+prism_check_dl_dir()
+
+
 }

@@ -9,10 +9,11 @@
 #' normals which can also be downloaded at 800m resolution.
 #' 
 #' @param type The type of data to download. Must be "ppt", "tmean", "tmin", 
-#'   "tmax", "tdmean", "vpdmin", or "vpdmax". Note that `tmean == 
-#'   mean(tmin, tmax)`.
+#'   "tmax", "tdmean", "vpdmin", or "vpdmax". "solclear", "solslope", 
+#'   "soltotal", and "soltrans" are also available only for 
+#'   `get_prism_normals()`. Note that `tmean == mean(tmin, tmax)`.
 #'   
-#' @param years a valid numeric year, or vector of years, to download data for.  
+#' @param years a valid numeric year, or vector of years, to download data for. 
 #'   
 #' @param keepZip if `TRUE`, leave the downloaded zip files in your 
 #'   'prism.path', if `FALSE`, they will be deleted.
@@ -41,8 +42,11 @@
 #' Annual and monthly prism data are available from 1891 to present. For 
 #' 1891-1980 data, monthly and annual data are grouped together in one download 
 #' file; `keep_pre81_months` determines if the other months/yearly data are kept
-#' after the download.  Data will be downloaded for all specified months (`mon`) 
+#' after the download.  Data will be downloaded for all specified months (`mon`)
 #' in all the `years` in the supplied vectors.
+#' 
+#' @return Nothing is returned - an error will occcur if download is not 
+#'   successful.
 #' 
 #' @examples \dontrun{
 #' # Get all annual average temperature data from 1990 to 2000
@@ -79,25 +83,11 @@ get_prism_annual <- function(type, years, keepZip = TRUE,
   }  
   
   if (length(pre_1981)) {
-    uris_pre81 <- sapply(
-      pre_1981,
-      function(x) {
-        paste(
-          service, type, x, sep = "/"
-        )
-      }
-    )
+    uris_pre81 <- gen_prism_url(pre_1981, type, service)
   }
   
   if (length(post_1981)) {  
-    uris_post81 <- sapply(
-      post_1981,
-      function(x) {
-        paste(
-          service, type, x, sep = "/"
-        )
-      }
-    )
+    uris_post81 <- gen_prism_url(post_1981, type, service) 
   }
   
   download_pb <- txtProgressBar(
@@ -111,7 +101,7 @@ get_prism_annual <- function(type, years, keepZip = TRUE,
   ### Handle post 1980 data
   if(length(uris_post81) > 0){    
     
-    for(i in 1:length(uris_post81)){
+    for(i in seq_along(uris_post81)) {
       prism_webservice(uris_post81[i],keepZip)
       setTxtProgressBar(download_pb, i)
     }
@@ -123,7 +113,7 @@ get_prism_annual <- function(type, years, keepZip = TRUE,
   if (length(uris_pre81) > 0) {
     
     pre_files <-c() 
-    for(j in 1:length(uris_pre81)){
+    for(j in seq_along(uris_pre81)){
       tmp <- prism_webservice(
         uris_pre81[j], 
         keepZip, 
@@ -144,7 +134,7 @@ get_prism_annual <- function(type, years, keepZip = TRUE,
       pre_files <- unlist(strsplit(pre_files,"\\."))
       pre_files <- pre_files[seq(1,length(pre_files),by =2)]
     
-      for (k in 1:length(pre_files)) {
+      for (k in seq_along(pre_files)) {
         if (keep_pre81_months) {
           # keep the annual data
           to_split <- gsub(pattern = "_all", replacement = "", x = pre_files[k])

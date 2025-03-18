@@ -17,7 +17,6 @@ get_prism_monthlys <- function(type, years, mon = 1:12, keepZip = TRUE,
                                keep_pre81_months = TRUE, service = NULL)
 {
   ### parameter and error handling
-
   prism_check_dl_dir()
   type <- match.arg(type, prism_vars())
  
@@ -45,18 +44,11 @@ get_prism_monthlys <- function(type, years, mon = 1:12, keepZip = TRUE,
   uris_post81 <- vector()
   
   if (is.null(service)) {
-	service <- "http://services.nacse.org/prism/data/public/4km"
+	  service <- "http://services.nacse.org/prism/data/public/4km"
   }
   
   if (length(pre_1981)) {
-    uris_pre81 <- sapply(
-      pre_1981,
-      function(x) {
-        paste(
-          service, type, x, sep = "/"
-        )
-      }
-    )
+    uris_pre81 <- gen_prism_url(pre_1981, type, service)
   }
 
   if (length(post_1981)) {  
@@ -66,14 +58,7 @@ get_prism_monthlys <- function(type, years, mon = 1:12, keepZip = TRUE,
       function(x) {paste(x[1], x[2], sep="")}
     )
     
-    uris_post81 <- sapply(
-      uri_dates_post81,
-      function(x) {
-        paste(
-          service, type, x, sep="/"
-        )
-      }
-    )
+    uris_post81 <- gen_prism_url(uri_dates_post81, type, service)
   }
     
   download_pb <- txtProgressBar(
@@ -86,19 +71,19 @@ get_prism_monthlys <- function(type, years, mon = 1:12, keepZip = TRUE,
 
   ### Handle post 1981 data
   if(length(uris_post81) > 0){    
-      for(i in 1:length(uris_post81)){
+      for(i in seq_along(uris_post81)){
         prism_webservice(uris_post81[i],keepZip)
         setTxtProgressBar(download_pb, i)
     }
   }
     
   counter <- length(uris_post81)+1
-   
+
   ### Handle pre 1981 files
   if (length(uris_pre81) > 0) {
   
     pre_files <- c()
-    for (j in 1:length(uris_pre81)) {
+    for (j in seq_along(uris_pre81)) {
       tmp <- prism_webservice(
         uris_pre81[j], 
         keepZip, 
@@ -117,7 +102,7 @@ get_prism_monthlys <- function(type, years, mon = 1:12, keepZip = TRUE,
       pre_files <- unlist(strsplit(pre_files,"\\."))
       pre_files <- pre_files[seq(1, length(pre_files), by = 2)]
       
-      for (k in 1:length(pre_files)) {
+      for (k in seq_along(pre_files)) {
         yr <- regmatches(pre_files[k], regexpr('[0-9]{4}', pre_files[k]))
         
         if (keep_pre81_months) {
@@ -126,9 +111,7 @@ get_prism_monthlys <- function(type, years, mon = 1:12, keepZip = TRUE,
           monstr <- mon_to_string(mon)
         }
         
-        to_split <-   sapply(monstr, function(x) {
-          gsub(pattern = "_all", replacement = x, x = pre_files[k])
-        })
+        to_split <- stringr::str_replace(pre_files[k], "_all", monstr)
         
         process_zip(pre_files[k], to_split)
       }
