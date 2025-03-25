@@ -1,7 +1,7 @@
-66d83c013599bf6efcb288084bcaf5dc *DESCRIPTION
+29df7f86bd7b686b67640c1d2419d0a4 *DESCRIPTION
 a788f341033c9c3afdac33e6217040aa *LICENSE
 b0000563cc41c07e37322c8bbf99e556 *NAMESPACE
-4f6499038d734a57f52a2a9bc89f29d2 *NEWS.md
+ca52470b7e042dcfd4e743aac3fe967c *NEWS.md
 5cd4414e37a093e391a8b383a50165b3 *R/get_prism_annual.R
 658d6edee3ac746d35ab75cfc6c3b609 *R/get_prism_dailys.R
 dee8ee7efedc9bb00dca48d15876bb2e *R/get_prism_monthlys.R
@@ -18,16 +18,16 @@ c2fb06fbdd9fea9114615e631b8ebb5c *R/prism_archive_clean.R
 2b3bce72044f9471927eb1bba21ee4f4 *R/prism_archive_ls.R
 fbb9eb6abafe2285d863d236450743af *R/prism_archive_subset.R
 764d39e9095e6539c69af53ea24c8381 *R/prism_archive_verify.R
-4fa40113587a69a04d6076643365083c *R/prism_set_dl_dir.R
+ac6b0a0db204f49ce964b5db47e57191 *R/prism_set_dl_dir.R
 d2505ec9f09bb4e0d8a3a5735f1b5e29 *R/prism_webservice.R
 3c3c44dd092b93dd7fbd855085cb4297 *R/utility_functions.R
 4db825fe90dbb9d27c8f872b5fc2fe9c *R/zzz.R
 87168b1deb5e0c7e4ed92ad0b3db86cf *README.md
-baeef0484f89f1c93a234619c9dbfd84 *build/vignette.rds
+756e02ef818840f56f5be575bde11121 *build/vignette.rds
 168a9cfcba1ae578326c2fe07f316d1d *inst/CITATION
 37522217dda94723c1bcdc49c7698210 *inst/doc/prism.R
 b42982115d06cc49b1a4fc8732ad83f3 *inst/doc/prism.Rmd
-08aac9a7dfa44328569f070a34f7586b *inst/doc/prism.html
+149800a939676d1b5e623c1d9bea47bf *inst/doc/prism.html
 5599cf94f706c24235c921645d414b74 *man/figures/README-plot_Boulder-1.png
 813f5a2f66d0d4557f361da80cdc6029 *man/figures/README-quick_plot-1.png
 d355bfc99d8b3715b1673c84d4a508d4 *man/figures/README-raster_math-1.png
@@ -44,7 +44,7 @@ bd67801771a6536635f807375a183415 *man/prism_archive_ls.Rd
 081d1f992f01feb277fb1b69c6456373 *man/prism_archive_subset.Rd
 de62d337e159e97f94259ce440cd1998 *man/prism_archive_verify.Rd
 f9388c3195be02bd9f3b79f25f9600ab *man/prism_check.Rd
-9207116d6702798674bcf55080baf2c4 *man/prism_set_dl_dir.Rd
+62adc6415935e3f08c1d4d2e17b8ca81 *man/prism_set_dl_dir.Rd
 5076670a8cf7b86bf96c2ca3940e7b7b *tests/testthat.R
 36910269d4096770dfc445c9a896ef85 *tests/testthat/prism_test/PRISM_ppt_30yr_normal_4kmD1_0301_bil.zip
 f391e7e787e592bcd8da02751f0821cd *tests/testthat/prism_test/PRISM_ppt_stable_4kmD2_19810101_bil.zip
@@ -63,7 +63,7 @@ a971d113cad4382cc928500fd825b380 *tests/testthat/prism_test/PRISM_tdmean_stable_
 9a57743c26dc29e197c3c6e5b1722214 *tests/testthat/prism_test/test_prism_archive_clean.zip
 56db51b299b8f8388c6a8d9cc9d151bf *tests/testthat/setup-prism.R
 7170fdafbe7c8fb3262a5d57014e31cd *tests/testthat/teardown-prism.R
-802197ee7b15361fe3f3b2aa218ca4b0 *tests/testthat/test-files_download.R
+4be8b893414a90de04e1f04105a8e1c6 *tests/testthat/test-files_download.R
 bd761ba8885cb709cd79dedbbd88aa00 *tests/testthat/test-gen_dates.R
 42248dd6fce8aee00ae183085566b9ed *tests/testthat/test-get_prism_.R
 27ca59d591f799bbfc1e85ae58d18213 *tests/testthat/test-get_prism_normals.R
