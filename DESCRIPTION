@@ -7,7 +7,7 @@ Description: Allows users to access the Oregon State Prism climate data
 URL: https://docs.ropensci.org/prism/,
         https://github.com/ropensci/prism
 BugReports: https://github.com/ropensci/prism/issues
-Version: 0.2.3
+Version: 0.3.0
 Authors@R: c(
     person("Hart", "Edmund", email ="Edmund.m.hart@gmail.com",role = c("aut", "ccp")),
     person("Kendon", "Bell", email = "kmb56@berkeley.edu", role = c("aut")),
@@ -15,16 +15,17 @@ Authors@R: c(
     role = c("ctb","cre"),comment = c(ORCID = "0000-0002-8625-6386"))
     )
 License: MIT + file LICENSE
-Imports: ggplot2, raster, httr, dplyr, stringr, magrittr, readr, utils
+Imports: dplyr, ggplot2, httr, magrittr, raster, readr, stringr, terra,
+        utils
 VignetteBuilder: knitr
 Suggests: covr, knitr, rmarkdown, testthat (>= 2.1.0)
-RoxygenNote: 7.3.2
+RoxygenNote: 7.3.3
 Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2025-03-24 17:43:59 UTC; RAButler
+Packaged: 2025-11-14 20:21:59 UTC; RAButler
 Author: Hart Edmund [aut, ccp],
   Kendon Bell [aut],
-  Alan Butler [ctb, cre] (<https://orcid.org/0000-0002-8625-6386>)
+  Alan Butler [ctb, cre] (ORCID: <https://orcid.org/0000-0002-8625-6386>)
 Maintainer: Alan Butler <rabutler@usbr.gov>
 Repository: CRAN
-Date/Publication: 2025-03-25 15:50:05 UTC
+Date/Publication: 2025-11-14 21:20:02 UTC

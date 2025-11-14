@@ -72,6 +72,12 @@ get_prism_normals <- function(type, resolution, mon = NULL, annual = FALSE,
     )
   }
   
+  if (type %in% c( "solclear", "solslope", "soltotal","soltrans") & resolution == '4km') {
+    stop(
+      "Clear sky, sloped, and total solar radiation are only available in 800m."
+    )
+  }
+  
   call_mon <- c()
   if(!is.null(mon)){
     if(any(mon < 1 | mon > 12)) {
@@ -101,13 +107,13 @@ get_prism_normals <- function(type, resolution, mon = NULL, annual = FALSE,
     }
   }
  
-  stemp <- "http://services.nacse.org/prism/data/public/normals"
-  uris <- gen_prism_url(call_mon, type, stemp, resolution) 
-
+  uris <- gen_prism_url(call_mon, type, resolution,
+                           ts_service = 'ftp_v2_normals_bil') 
+  
   mpb <- txtProgressBar(min = 0, max =length(uris), style = 3)
  
   for(i in seq_along(uris)){
-    prism_webservice(uris[i],keepZip)
+    prism_webservice(uris[i],keepZip, service = 'ftp_v2_normals_bil' )
     setTxtProgressBar(mpb, i)
     
   }

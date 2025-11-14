@@ -14,6 +14,9 @@
 #'   downloading data before 1981. This is so that the existence of the data can
 #'   be correctly checked, as the file includes all monthly data for a given 
 #'   year.
+#'   
+#' @param service Character string specifying the service type. Must be 
+#'   'web_service_v2' (default) or 'ftp_v2_normals_bil'.
 #' 
 #' @examples 
 #' \dontrun{
@@ -26,7 +29,7 @@
 #' @noRd
 
 prism_webservice <- function(uri, keepZip = FALSE, returnName = FALSE, 
-                             pre81_months = NULL)
+                             pre81_months = NULL, service = 'web_service_v2')
 {
   ## Get file name
   x <- httr::HEAD(uri)
@@ -38,12 +41,22 @@ prism_webservice <- function(uri, keepZip = FALSE, returnName = FALSE,
     return(NULL)
   }
   
-  fn <- x$headers[["content-disposition"]]
-  fn <- regmatches(fn, regexpr('\\"[a-zA-Z0-9_\\.]+', fn))
-  fn <- substr(fn, 2, nchar((fn)))
+  if (service == 'web_service_v2'){
+    fn <- x$headers[["content-disposition"]]
+    fn <- regmatches(fn, regexpr('\\"[a-zA-Z0-9_\\.]+', fn))
+    fn <- substr(fn, 2, nchar((fn)))
+  } else if (service == 'ftp_v2_normals_bil') {
+    fn <- basename(uri)
+  } else {
+    stop("Invalid service type. Must be 'web_service_v1' or 'ftp_v2_normals_bil'.")
+  }
+ 
   
   if (length(prism_not_downloaded(fn, pre81_months = pre81_months)) == 0) {
     message("\n", fn, " already exists. Skipping downloading.")
+    return(NULL)
+  } else if (length(prism_not_downloaded_as_v1(fn, pre81_months = pre81_months)) == 0) {
+    message("\n", fn, " is a webservice v2 request that already exists as v1 file. Skipping downloading. (Delete original webservice v1 file if you want to update).")
     return(NULL)
   } else {
   
@@ -118,10 +131,9 @@ check_status <- function(x, uri) {
       '\nCould not reach url, with status:\n',
       x$status_code, "\n",
       'Please try pasting one or more of the following urls into your web browser:\n',
-      'https://services.nacse.org/prism/data/public/4km/tmin/20090405', '\n',
-      'https://services.nacse.org/prism/data/public/4km/tmin/200904', '\n',
-      'https://services.nacse.org/prism/data/public/4km/tmin/2009', '\n',
-      'https://services.nacse.org/prism/data/public/4km/tmin/1944', '\n',
+      'https://services.nacse.org/prism/data/get/us/4km/ppt/202002', '\n',
+      'https://services.nacse.org/prism/data/get/us/4km/tmax/2021', '\n',
+      'https://services.nacse.org/prism/data/get/us/4km/tmin/20000305', '\n',
       'If you receive the same status code, then the issue is with the PRISM web service.\n',
       'Please try again later or use the manual downloads at https://prism.oregonstate.edu.\n',
       'If the status is different or download works, please file a bug at:\n',
